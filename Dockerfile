@@ -1,15 +1,16 @@
 FROM php:7.3.8-cli-alpine3.10 AS builder
 
+ARG tarball_url="https://github.com/felixfbecker/php-language-server/archive/master.tar.gz"
 ENV LOCAL_BIN_DIR="/usr/local/bin"
 ENV PATH="$LOCAL_BIN_DIR:$PATH"
-ENV TARBALL_URL="https://github.com/felixfbecker/php-language-server/archive/v5.4.6.tar.gz"
 ENV APP_DIR=/app
+
+WORKDIR $APP_DIR
 
 COPY composer-installer $LOCAL_BIN_DIR
 
 RUN (set -eux -o pipefail \
-	&& mkdir -p "$APP_DIR" && cd "$APP_DIR" \
-	&& curl -L "$TARBALL_URL" | tar -zxv --strip-components=1 \
+	&& curl -L "$tarball_url" | tar -zxv --strip-components=1 \
 	&& composer-installer --filename=composer --install-dir=$LOCAL_BIN_DIR \
 	&& composer install --no-dev --optimize-autoloader --prefer-dist)
 

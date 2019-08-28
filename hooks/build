@@ -1,0 +1,5 @@
+#!/bin/sh
+
+BASEDIR=$(cd $(dirname $0); pwd -P)
+
+make -f $BASEDIR/../Makefile autobuild
